@@ -133,22 +133,5 @@
     "imageCover": "tour-9-cover.jpg",
     "images": ["tour-9-1.jpg", "tour-9-2.jpg", "tour-9-3.jpg"],
     "startDates": ["2021-12-16,10:00", "2022-01-16,10:00", "2022-12-12,10:00"]
-  },
-  { "id": 9, "zz": "asa", "z9": "dasd", "res": "oladddd" },
-  {
-    "id": 10,
-    "zz": "asa",
-    "z9": "dasd",
-    "res": "oladddd",
-    "price": "34",
-    "name": "vik"
-  },
-  {
-    "id": 11,
-    "zz": "asa",
-    "z9": "dasd",
-    "res": "oladddd",
-    "price": "34",
-    "name": "s"
   }
 ]
