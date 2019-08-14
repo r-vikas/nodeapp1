@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Tour = require('./../models/tourModel');
+const APIFeatures = require('../utils/apiFeatures');
 
 //const tours = JSON.parse(fs.readFileSync('./dev-data/data/tours-simple.json'));
 
@@ -23,23 +24,21 @@ const Tour = require('./../models/tourModel');
 //   next();
 // };
 
+exports.aliasTopTours = (req, res, next) => {
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
+  next();
+};
+
 exports.getAllTours = async (req, res) => {
   try {
-    console.log(req.query);
-
-    const queryObj = { ...req.query };
-    const excludedFields = ['limit', 'sort', 'page', 'fields'];
-    excludedFields.forEach(el => delete queryObj[el]);
-
-    const query = Tour.find(req.queryObj);
-
-    // const tours = await Tour.find()
-    //   .where('duration')
-    //   .equals(5)
-    //   .where('difficulty')
-    //   .equals('easy');
-
-    const tours = await query;
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limit()
+      .pagination();
+    const tours = await features.query;
 
     res.status(200).send({
       status: 'success',
@@ -133,17 +132,36 @@ exports.deleteTour = async (req, res) => {
   }
 };
 
-// exports.deleteTour = (req, res) => {
-//   const { id } = req.params;
-//   tours.splice(id, 1);
-//   fs.writeFileSync('./dev-data/data/tours-simple.json', JSON.stringify(tours));
-//   const toursNew = JSON.parse(
-//     fs.readFileSync('./dev-data/data/tours-simple.json')
-//   );
-//   res.status(200).json({
-//     status: 'sucess _ deleted',
-//     data: {
-//       toursNew
-//     }
-//   });
-// };
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tour.aggregate([
+      { $match: { ratingsAverage: { $gte: 4.5 } } },
+      {
+        $group: {
+          _id: '$difficulty',
+          num: { $sum: 1 },
+          numRating: { $sum: '$ratingsQuantity' },
+          avgRating: { $avg: '$ratingsAverage' },
+          avgPrice: { $avg: '$price' },
+          minPrice: { $min: '$price' },
+          maxPrice: { $max: '$price' }
+        }
+      },
+      { $sort: { avgPrice: 1 } }
+      // {
+      //   $match: { _id: { $ne: 'easy' } }
+      // }
+    ]);
+    res.status(200).json({
+      status: 'deleted',
+      data: {
+        stats
+      }
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'fail',
+      message: err
+    });
+  }
+};
