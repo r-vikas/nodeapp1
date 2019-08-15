@@ -150,7 +150,7 @@ exports.getTourStats = async (req, res) => {
       // }
     ]);
     res.status(200).json({
-      status: 'deleted',
+      status: 'success',
       data: {
         stats
       }

@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
         "virtuals"
+    ],
+    "cSpell.ignoreWords": [
+        "slugify"
     ]
 }
