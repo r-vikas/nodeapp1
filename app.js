@@ -18,6 +18,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Cant find the ${req.originalUrl}`, 404));
 });
 
+//error object : understood by function
 app.use(globalErrorHandler);
 
 module.exports = app;
