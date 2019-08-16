@@ -3,6 +3,7 @@
         "virtuals"
     ],
     "cSpell.ignoreWords": [
+        "minlength",
         "slugify"
     ]
 }
