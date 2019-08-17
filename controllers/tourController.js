@@ -41,10 +41,6 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
     .pagination();
   const tours = await features.query;
 
-  // if (!tours) {
-  //   return next(new AppError('no tours found with that id', 404));
-  // }
-
   res.status(200).send({
     status: 'success',
     results: tours.length,
