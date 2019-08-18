@@ -23,7 +23,7 @@ const handleJWTError = err =>
   new AppError('invalid token, please log in again', 401);
 
 const handleJWTExpiredError = err =>
-  new AppError('toekn has expired, log in again', 401);
+  new AppError('token has expired, log in again', 401);
 
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
