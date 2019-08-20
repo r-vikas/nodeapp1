@@ -1,11 +1,10 @@
+const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
-const User = require('../models/userModel');
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
-const sendEmail = require('../utils/email');
+const User = require('./../models/userModel');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
+const sendEmail = require('./../utils/email');
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -25,6 +24,7 @@ const createSendToken = (user, statusCode, res) => {
 
   res.cookie('jwt', token, cookieOptions);
 
+  // Remove password from output
   user.password = undefined;
 
   res.status(statusCode).json({
@@ -36,6 +36,25 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+// exports.signup = catchAsync(async (req, res, next) => {
+//   const newUser = await User.create({
+//     name: req.body.name,
+//     email: req.body.email,
+//     password: req.body.password,
+//     passwordConfirm: req.body.passwordConfirm
+//   });
+
+//   const token = signToken(newUser._id);
+
+//   res.status(201).json({
+//     success: 'success',
+//     token,
+//     data: {
+//       user: newUser
+//     }
+//   });
+// });
+
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
@@ -44,15 +63,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm
   });
 
-  const token = signToken(newUser._id);
-
-  res.status(201).json({
-    success: 'success',
-    token,
-    data: {
-      user: newUser
-    }
-  });
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -100,6 +111,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   req.user = CurrentUser;
+
   next();
 });
 
