@@ -1,6 +1,6 @@
 const User = require('./../models/userModel');
 const AppError = require('../utils/appError');
-
+const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 
 const filterObj = (obj, ...allowedFields) => {
@@ -91,16 +91,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateUser = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'under development'
-  });
-};
+exports.updateUser = factory.updateOne(User);
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: 'errors',
-    message: 'under development'
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
