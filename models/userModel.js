@@ -21,7 +21,8 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'provide a valid email']
   },
   photo: {
-    type: String
+    type: String,
+    default: 'default.jpg'
     //required: [true, 'A tour must have a cover image']
   },
   role: {
